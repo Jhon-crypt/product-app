@@ -55,7 +55,7 @@ export default function ProductSection() {
                 <div className="d-flex align-content-center justify-content-center">
                     <div className="row">
                         {products.map((product) => (
-                            <div className="col mb-2" key={product.id}>
+                            <div className="col mb-4" key={product.id}>
                                 <ProductCard product={product} deleteProduct={handleDeleteProduct} />
                             </div>
                         ))}
