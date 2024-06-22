@@ -32,6 +32,7 @@ export default function ProductCard({ product, deleteProduct }: ProductCardProps
                     <a className="card-link btn btn-sm btn-outline-dark" onClick={() => deleteProduct(product.id)}><CiTrash /></a>
                 </div>
             </div>
+            <br />
             <UpdateProductModal product={product} />
         </>
     );
