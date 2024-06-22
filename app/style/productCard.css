@@ -1,0 +1,20 @@
+/* components/cards/ProductCard.module.css */
+
+.custom-card {
+    height: 250px; /* Set a fixed height */
+    width: 200px; /* Set a fixed width */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    margin: 0 auto; /* Center the card within its container */
+  }
+  
+  .custom-card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  
