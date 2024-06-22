@@ -1,41 +1,39 @@
 "use client"
-
-import { useState } from 'react';
+import ProductForm from "../form/productForm"
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { createProduct } from '@/app/store/slice/productsSlice';
+import { updateProduct } from '@/app/store/slice/productsSlice';
 import { AppDispatch } from '@/app/store/store';
 import { ToastContainer, toast } from 'react-toastify';
-import ProductForm from '../form/productForm';
 import "react-toastify/dist/ReactToastify.css";
 
-interface Product {
-    name: string;
-    quantity: number;
-    category: string;
-    price: number;
-    units_available: number;
+interface UpdateProductModalProps {
+    product: {
+        id: string;
+        name: string;
+        quantity: number;
+        category: string;
+        price: number;
+        units_available: number;
+    };
 }
 
-const initialProductState: Product = {
-    name: '',
-    quantity: 0,
-    category: '',
-    price: 0,
-    units_available: 0,
-};
-
-export default function AddProductsModal() {
+const UpdateProductModal = ({ product }: UpdateProductModalProps) => {
     const dispatch: AppDispatch = useDispatch();
-    const [product, setProduct] = useState<Product>(initialProductState);
+    const [currentProduct, setCurrentProduct] = useState(product);
+
+    useEffect(() => {
+        setCurrentProduct(product);
+    }, [product]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setProduct({
-            ...product,
+        setCurrentProduct({
+            ...currentProduct,
             [e.target.name]: e.target.value,
         });
     };
 
-    const validateProduct = (product: Product): string | null => {
+    const validateProduct = (product: typeof currentProduct): string | null => {
         if (!product.name) return "Product name is required";
         if (product.quantity <= 0) return "Product quantity must be greater than 0";
         if (!product.category) return "Category is required";
@@ -45,32 +43,33 @@ export default function AddProductsModal() {
     };
 
     const handleSubmit = async () => {
-        const validationError = validateProduct(product);
+        const validationError = validateProduct(currentProduct);
         if (validationError) {
             toast.error(validationError, { position: "top-right" });
             return;
         }
 
         try {
-            await dispatch(createProduct(product)).unwrap();
-            toast.success("Product created successfully!", { position: "top-right" });
-            setProduct(initialProductState); 
+            await dispatch(updateProduct(currentProduct)).unwrap();
+            toast.success("Product updated successfully!", { position: "top-right" });
         } catch (err) {
-            toast.error("Failed to create product", { position: "top-right" });
+            toast.error("Failed to update product", { position: "top-right" });
         }
-    };
+    }
 
     return (
+
         <>
-            <div className="modal fade" id="exampleModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+            <div className="modal fade" id="updateProductModal" aria-labelledby="updateProductModal" aria-hidden="true">
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h1 className="modal-title fs-5" id="exampleModalLabel">Add Products</h1>
+                            <h1 className="modal-title fs-5" id="exampleModalLabel">Update Product</h1>
                             <button type="button" className="btn-close btn-rounded" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <ProductForm product={product} handleChange={handleChange} />
+                        <ProductForm product={currentProduct} handleChange={handleChange} />
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary btn-rounded py-2 px-3" data-bs-dismiss="modal">Close</button>
@@ -81,6 +80,9 @@ export default function AddProductsModal() {
             </div>
             <ToastContainer />
         </>
-    );
+
+    )
+
 }
 
+export default UpdateProductModal;

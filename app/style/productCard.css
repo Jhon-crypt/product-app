@@ -1,14 +1,13 @@
-/* components/cards/ProductCard.module.css */
 
 .custom-card {
-    height: 250px; /* Set a fixed height */
-    width: 200px; /* Set a fixed width */
+    height: 250px;
+    width: 200px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     text-align: center;
-    margin: 0 auto; /* Center the card within its container */
+    margin: 0 auto; 
   }
   
   .custom-card-body {

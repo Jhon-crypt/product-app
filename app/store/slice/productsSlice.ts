@@ -47,7 +47,20 @@ export const createProduct = createAsyncThunk('products/createProduct', async (p
     return data;
 });
 
-
+export const updateProduct = createAsyncThunk('products/updateProduct', async (product: Product) => {
+    const response = await fetch(`https://inventory.free.beeceptor.com/api/inventory/${product.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to update product');
+    }
+    const data = await response.json();
+    return data;
+});
 
 const productsSlice = createSlice({
     name: 'products',
@@ -90,6 +103,22 @@ const productsSlice = createSlice({
             .addCase(createProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to create product';
+            })
+            //update
+            .addCase(updateProduct.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateProduct.fulfilled, (state, action) => {
+                const index = state.products.findIndex(product => product.id === action.payload.id);
+                if (index !== -1) {
+                    state.products[index] = action.payload;
+                }
+                state.loading = false;
+            })
+            .addCase(updateProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to update product';
             });
     },
 });
