@@ -35,12 +35,27 @@ export const deleteProduct = createAsyncThunk('products/deleteProduct', async (p
     return productId;
 });
 
+export const createProduct = createAsyncThunk('products/createProduct', async (product: Omit<Product, 'id'>) => {
+    const response = await fetch('https://inventory.free.beeceptor.com/api/inventory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(product),
+    });
+    const data = await response.json();
+    return data;
+});
+
+
+
 const productsSlice = createSlice({
     name: 'products',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
+            //Fetch
             .addCase(fetchProducts.pending, (state) => {
                 state.loading = true;
             })
@@ -52,6 +67,7 @@ const productsSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch products';
             })
+            //delete
             .addCase(deleteProduct.pending, (state) => {
                 state.loading = true;
             })
@@ -62,6 +78,18 @@ const productsSlice = createSlice({
             .addCase(deleteProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to delete product';
+            })
+            //create
+            .addCase(createProduct.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createProduct.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products.push(action.payload);
+            })
+            .addCase(createProduct.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to create product';
             });
     },
 });

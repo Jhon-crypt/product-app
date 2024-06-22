@@ -20,10 +20,10 @@ export default function ProductCard({ product, deleteProduct }: ProductCardProps
         <div className="card custom-card card-rounded" style={{ width: "200px" }}>
             <div className="custom-card-body card-body">
                 <h5 className="card-title">{product.name}</h5>
-                <p className="card-text">{product.category}</p>
-                <p>${product.price}</p>
-                <p>{product.quantity}</p>
-                <p>{product.units_available}</p>
+                <p className="card-text">category: {product.category}</p>
+                <p>price: ${product.price}</p>
+                <p>quantity: {product.quantity}</p>
+                <p>unit: {product.units_available}</p>
             </div>
             <div className='card-footer'>
                 <a href="#" className="card-link btn btn-sm btn-outline-dark"><CiEdit /></a>
